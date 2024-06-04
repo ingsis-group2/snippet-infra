@@ -20,7 +20,6 @@ services:
     env_file:
       - .env
 
-
   snippet-permissions-db:
     container_name: "snippet-permissions-db"
     image: postgres:12
@@ -49,10 +48,9 @@ services:
     container_name: "asset_service"
     image: ghcr.io/austral-ingsis/snippet-asset-service:latest
     ports:
-      - "8083:8080"
+      - "8082:8080"
     environment:
       AZURE_HOST: "http://azurite"
-
 
   azurite:
     image: mcr.microsoft.com/azure-storage/azurite
@@ -70,7 +68,7 @@ services:
     container_name: "snippet-runner"
     image: ghcr.io/ingsis-group2/snippet-runner-dev:latest
     ports:
-      - "8082:8080"
+      - "8083:8080"
     volumes:
       - .:/app/data
 
