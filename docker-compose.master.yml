@@ -7,8 +7,8 @@ services:
     image: ghcr.io/ingsis-group2/snippet-permissions-master:latest
     ports:
       - "8080:8080"
-    expose:
-      - "8080"
+    env_file:
+      - .env
     environment:
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
@@ -17,13 +17,12 @@ services:
       DB_PORT: ${DB_PORT}
     depends_on:
       - snippet-permissions-db
-    env_file:
-      - .env
-
 
   snippet-permissions-db:
     container_name: "snippet-permissions-db"
     image: postgres:12
+    env_file:
+      - .env
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -34,8 +33,7 @@ services:
       - "5432"
     volumes:
       - snippet-permissions-db:/var/lib/postgresql/data
-    env_file:
-      - .env
+
 
   snippet-operations:
     container_name: "snippet-operations"
