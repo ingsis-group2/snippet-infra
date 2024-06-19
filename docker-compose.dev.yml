@@ -83,6 +83,15 @@ services:
     ports:
       - "5173:5173"
 
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./:/etc/nginx/conf.d/:ro
+      - ./:/usr/share/nginx/:ro
+
+
 volumes:
   snippet-permissions-db:
     external: false
