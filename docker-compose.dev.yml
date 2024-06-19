@@ -88,8 +88,8 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./:/etc/nginx/conf.d/:ro
-      - ./:/usr/share/nginx/:ro
+      - ./conf.d:/etc/nginx/conf.d/:ro
+      - ./static:/usr/share/nginx/:ro
 
 
 volumes:
