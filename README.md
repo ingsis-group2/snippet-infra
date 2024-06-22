@@ -4,7 +4,9 @@
 ```bash
 docker login ghcr.io
 ## for master
+docker compose -f docker-compose.master.yml pull
 docker compose -f docker-compose.master.yml up --build
 ## for dev
+docker compose -f docker-compose.dev.yml pull
 docker compose -f docker-compose.dev.yml up --build
 ```
