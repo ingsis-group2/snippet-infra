@@ -79,9 +79,12 @@ services:
       - .:/app/data
 
   printscript-ui:
-    image: ghcr.io/ingsis-group2/printscript-ui:latest
-    ports:
-      - "5173:5173"
+    container_name: "printscript-ui"
+    image: ghcr.io/ingsis-group2/printscript-ui-dev:latest
+    env_file:
+      - .env
+    expose:
+      - "80"
 
   nginx:
     image: nginx:latest

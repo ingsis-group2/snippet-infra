@@ -80,10 +80,13 @@ services:
       - .:/app/data
 
   printscript-ui:
-    image: ghcr.io/ingsis-group2/printscript-ui:latest
-    ports:
-      - "5173:5173"
-      -
+    container_name: "printscript-ui"
+    image: ghcr.io/ingsis-group2/printscript-ui-master:latest
+    env_file:
+      - .env
+    expose:
+      - "80"
+
 volumes:
   snippet-permissions-db:
     external: false
