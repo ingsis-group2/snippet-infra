@@ -1,0 +1,25 @@
+name: "Continuous Deployment Main"
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update_vm:
+    name: Update VM
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update VM
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VM_IP_MASTER }}
+          username: "azureuser"
+          key: ${{ secrets.PRIVATE_KEY_MASTER }}
+          script: |
+            cd snippet-infra
+            sudo docker compose -f docker-compose.master.yml stop
+            git pull
+            sudo docker compose -f docker-compose.master.yml pull
+            sudo docker compose -f docker-compose.master.yml up -d --build
+
