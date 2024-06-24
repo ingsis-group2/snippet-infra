@@ -1,0 +1,25 @@
+name: "Continuous Deployment Dev"
+
+on:
+  workflow_run:
+    branches:
+      - dev
+
+jobs:
+  update_vm:
+    name: Update VM
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update VM
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VM_IP_DEV }}
+          username: "azureuser"
+          key: ${{ secrets.PRIVATE_KEY_DEV }}
+          script: |
+            cd snippet-infra
+            sudo docker compose -f docker-compose.dev.yml stop
+            git pull
+            sudo docker compose -f docker-compose.dev.yml pull
+            sudo docker compose -f docker-compose.dev.yml up -d --build
+
