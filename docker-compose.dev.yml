@@ -80,7 +80,7 @@ services:
 
   printscript-ui:
     container_name: "printscript-ui"
-    image: ghcr.io/ingsis-group2/printscript-ui-master:latest
+    image: ghcr.io/ingsis-group2/printscript-ui-dev:latest
     restart: always
     ports:
       - "5173:5173"
