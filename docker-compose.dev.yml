@@ -102,7 +102,7 @@ services:
       - ./static:/usr/share/nginx/:ro
       - ./certbot/www:/var/www/certbot/:ro
       - ./certbot/conf/:/etc/nginx/ssl/:ro
-      - ./nginx/images/:/usr/share/nginx/images/:ro
+      - ./nginx/images/:/usr/share/nginx/:ro
   certbot:
     image: certbot/certbot:latest
     volumes:
