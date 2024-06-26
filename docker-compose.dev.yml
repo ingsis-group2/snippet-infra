@@ -92,6 +92,8 @@ services:
       - .env
     environment:
       DOMAIN_NAME: ${DOMAIN_NAME}
+    security_opt:
+      - "apparmor=docker-nginx"
     ports:
       - "80:80"
       - "443:443"
