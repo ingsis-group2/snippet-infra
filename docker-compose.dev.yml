@@ -88,12 +88,23 @@ services:
 
   nginx:
     image: nginx:latest
+    env_file:
+      - .env
+    environment:
+      DOMAIN_NAME: ${DOMAIN_NAME}
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./conf.d:/etc/nginx/conf.d/:ro
       - ./static:/usr/share/nginx/:ro
-
+      - ./certbot/www:/var/www/certbot/:ro
+      - ./certbot/conf/:/etc/nginx/ssl/:ro
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - ./certbot/www/:/var/www/certbot/:rw
+      - ./certbot/conf/:/etc/letsencrypt/:rw
 
 volumes:
   snippet-permissions-db:
