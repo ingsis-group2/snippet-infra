@@ -5,6 +5,7 @@ services:
   snippet-permissions:
     container_name: "snippet-permissions"
     image: ghcr.io/ingsis-group2/snippet-permissions-dev:latest
+    restart: always
     ports:
       - "8080:8080"
     env_file:
@@ -21,6 +22,7 @@ services:
   snippet-permissions-db:
     container_name: "snippet-permissions-db"
     image: postgres:12
+    restart: always
     env_file:
       - .env
     environment:
@@ -38,6 +40,7 @@ services:
   snippet-operations:
     container_name: "snippet-operations"
     image: ghcr.io/ingsis-group2/snippet-operations-dev:latest
+    restart: always
     ports:
       - "8081:8080"
     environment:
@@ -53,6 +56,7 @@ services:
   asset-service:
     container_name: "asset_service"
     image: ghcr.io/austral-ingsis/snippet-asset-service:latest
+    restart: always
     ports:
       - "8082:8080"
     environment:
@@ -73,6 +77,7 @@ services:
   snippet-runner:
     container_name: "snippet-runner"
     image: ghcr.io/ingsis-group2/snippet-runner-dev:latest
+    restart: always
     ports:
       - "8083:8080"
     volumes:
@@ -87,12 +92,42 @@ services:
 
   nginx:
     image: nginx:latest
+    restart: always
+    env_file:
+      - .env
+    environment:
+      DOMAIN_NAME: ${DOMAIN_NAME}
+    security_opt:
+      - "apparmor=docker-nginx"
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./conf.d:/etc/nginx/conf.d/:ro
       - ./static:/usr/share/nginx/:ro
+      - ./certbot/www:/var/www/certbot/:ro
+      - ./certbot/conf/:/etc/nginx/ssl/:ro
+      - ./nginx/images/:/usr/share/nginx/:ro
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - ./certbot/www/:/var/www/certbot/:rw
+      - ./certbot/conf/:/etc/letsencrypt/:rw
 
+  agent:
+    container_name: newrelic-infra
+    build:
+      context: .
+      dockerfile: newrelic-infra.dockerfile
+    cap_add:
+      - SYS_PTRACE
+    network_mode: bridge
+    pid: host
+    privileged: true
+    volumes:
+      - "/:/host:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    restart: unless-stopped
 
 volumes:
   snippet-permissions-db:
