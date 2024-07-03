@@ -16,6 +16,7 @@ services:
       DB_NAME: ${DB_NAME}
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
+      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_KEY}
     depends_on:
       - snippet-permissions-db
 
@@ -48,6 +49,7 @@ services:
       AUTH_SERVER_URI: ${AUTH_SERVER_URI}
       AUTH_CLIENT_ID: ${AUTH_CLIENT_ID}
       AUTH_CLIENT_SECRET: ${AUTH_CLIENT_SECRET}
+      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_KEY}
     volumes:
       - ./data:/app/data
     env_file:
@@ -67,6 +69,8 @@ services:
     container_name: "azurite"
     hostname: azurite
     restart: always
+    environment:
+      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_KEY}
     ports:
       - "10000:10000"
       - "10001:10001"
@@ -78,6 +82,8 @@ services:
     container_name: "snippet-runner"
     image: ghcr.io/ingsis-group2/snippet-runner-dev:latest
     restart: always
+    environment:
+      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_KEY}
     ports:
       - "8083:8080"
     volumes:
@@ -97,8 +103,6 @@ services:
       - .env
     environment:
       DOMAIN_NAME: ${DOMAIN_NAME}
-    security_opt:
-      - "apparmor=docker-nginx"
     ports:
       - "80:80"
       - "443:443"
@@ -113,21 +117,6 @@ services:
     volumes:
       - ./certbot/www/:/var/www/certbot/:rw
       - ./certbot/conf/:/etc/letsencrypt/:rw
-
-  agent:
-    container_name: newrelic-infra
-    build:
-      context: .
-      dockerfile: newrelic-infra.dockerfile
-    cap_add:
-      - SYS_PTRACE
-    network_mode: bridge
-    pid: host
-    privileged: true
-    volumes:
-      - "/:/host:ro"
-      - "/var/run/docker.sock:/var/run/docker.sock"
-    restart: unless-stopped
 
 volumes:
   snippet-permissions-db:

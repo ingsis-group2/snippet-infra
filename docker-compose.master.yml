@@ -15,6 +15,7 @@ services:
       DB_NAME: ${DB_NAME}
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
+      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_KEY}
     depends_on:
       - snippet-permissions-db
 
@@ -45,6 +46,7 @@ services:
       AUTH_SERVER_URI: ${AUTH_SERVER_URI}
       AUTH_CLIENT_ID: ${AUTH_CLIENT_ID}
       AUTH_CLIENT_SECRET: ${AUTH_CLIENT_SECRET}
+      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_KEY}
     volumes:
       - ./data:/app/data
     env_file:
@@ -76,6 +78,8 @@ services:
     image: ghcr.io/ingsis-group2/snippet-runner-master:latest
     ports:
       - "8083:8080"
+    environment:
+      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_KEY}
     volumes:
       - .:/app/data
 
@@ -86,6 +90,27 @@ services:
     ports:
       - "5173:5173"
 
+  nginx:
+    image: nginx:latest
+    restart: always
+    env_file:
+      - .env
+    environment:
+      DOMAIN_NAME: ${DOMAIN_NAME}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./conf.d:/etc/nginx/conf.d/:ro
+      - ./static:/usr/share/nginx/:ro
+      - ./certbot/www:/var/www/certbot/:ro
+      - ./certbot/conf/:/etc/nginx/ssl/:ro
+      - ./nginx/images/:/usr/share/nginx/:ro
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - ./certbot/www/:/var/www/certbot/:rw
+      - ./certbot/conf/:/etc/letsencrypt/:rw
 
 volumes:
   snippet-permissions-db:
