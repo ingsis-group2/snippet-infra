@@ -16,6 +16,7 @@ services:
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
       NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_KEY}
+      NEW_RELIC_APP_NAME: snippet-permissions
     depends_on:
       - snippet-permissions-db
 
@@ -47,6 +48,7 @@ services:
       AUTH_CLIENT_ID: ${AUTH_CLIENT_ID}
       AUTH_CLIENT_SECRET: ${AUTH_CLIENT_SECRET}
       NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_KEY}
+      NEW_RELIC_APP_NAME: snippet-operations
     volumes:
       - ./data:/app/data
     env_file:
@@ -80,6 +82,7 @@ services:
       - "8083:8080"
     environment:
       NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_KEY}
+      NEW_RELIC_APP_NAME: snippet-runner
     volumes:
       - .:/app/data
 
@@ -101,7 +104,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./conf.d:/etc/nginx/conf.d/:ro
+      - ./conf.d/default-master.conf:/etc/nginx/conf.d/:ro
       - ./static:/usr/share/nginx/:ro
       - ./certbot/www:/var/www/certbot/:ro
       - ./certbot/conf/:/etc/nginx/ssl/:ro
