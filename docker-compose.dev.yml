@@ -17,6 +17,7 @@ services:
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
       NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_KEY}
+      NEW_RELIC_APP_NAME: snippet-permissions
     depends_on:
       - snippet-permissions-db
 
@@ -50,6 +51,7 @@ services:
       AUTH_CLIENT_ID: ${AUTH_CLIENT_ID}
       AUTH_CLIENT_SECRET: ${AUTH_CLIENT_SECRET}
       NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_KEY}
+      NEW_RELIC_APP_NAME: snippet-operations
     volumes:
       - ./data:/app/data
     env_file:
@@ -84,6 +86,7 @@ services:
     restart: always
     environment:
       NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_KEY}
+      NEW_RELIC_APP_NAME: snippet-runner
     ports:
       - "8083:8080"
     volumes:
@@ -117,6 +120,11 @@ services:
     volumes:
       - ./certbot/www/:/var/www/certbot/:rw
       - ./certbot/conf/:/etc/letsencrypt/:rw
+
+  redis:
+    image: redis:6-alpine
+    ports:
+      - "6379:6369"
 
 volumes:
   snippet-permissions-db:
