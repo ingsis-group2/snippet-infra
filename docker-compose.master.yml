@@ -53,6 +53,8 @@ services:
       - ./data:/app/data
     env_file:
       - .env
+    depends_on:
+      - redis
 
   asset-service:
     container_name: "asset_service"
@@ -85,6 +87,8 @@ services:
       NEW_RELIC_APP_NAME: snippet-runner
     volumes:
       - .:/app/data
+    depends_on:
+      - redis
 
   printscript-ui:
     container_name: "printscript-ui"
@@ -114,6 +118,12 @@ services:
     volumes:
       - ./certbot/www/:/var/www/certbot/:rw
       - ./certbot/conf/:/etc/letsencrypt/:rw
+
+  redis:
+    image: redis:6-alpine
+    ports:
+      - "6379:6369"
+
 
 volumes:
   snippet-permissions-db:
