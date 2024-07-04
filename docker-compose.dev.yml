@@ -133,3 +133,4 @@ volumes:
     external: false
   blob:
     external: false
+  dist-volume:
